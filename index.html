@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Sahil Dalvi Portfolio">
+  <title>Sahil Dalvi - Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Header with navigation -->
+  <header>
+    <div class="navbar">
+      <div class="logo">
+        <a href="#">Sahil Dalvi</a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#bio">About</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero-section">
+    <div class="hero-content">
+      <img class="profile-pic" src="profile.jpg" alt="Profile Picture">
+      <h1>Sahil Dalvi</h1>
+      <p>Software Developer | QA Engineer | Product Support</p>
+      <a href="#projects" class="btn">View Projects</a>
+      <a href="resume.pdf" class="btn" download>Download Resume</a>
+
+    </div>
+  </section>
+
+  <!-- Bio Section -->
+  <section id="bio" class="section bio-section">
+    <h2>About Me</h2>
+    <div class="bio-container">
+      <img src="profile.jpg" alt="Sahil Dalvi" class="bio-image">
+      <div class="bio-text">
+        <p>
+          I’m <strong>Sahil Dalvi</strong>, a passionate and detail-oriented <strong>Software Developer</strong> and <strong>QA Engineer</strong> with hands-on experience in building robust, user-centric applications and ensuring product quality. I’ve worked across QA, product support, and development teams, contributing to high-performing projects at companies like IGP.com and Alluvium.
+        </p>
+        <p>
+          With a background in <strong>Engineering</strong> and a Postgraduate Diploma in <strong>Information Technology</strong> from Algoma University, I bring a mix of analytical problem-solving, creative thinking, and a drive for continuous learning. My toolbox includes <strong>Playwright</strong>, <strong>JavaScript</strong>, <strong>Jira</strong>, and <strong>API testing</strong>—and I’m always hungry to learn more.
+        </p>
+        <p>
+          Currently seeking new challenges in <strong>QA Engineering</strong> or <strong>Product Support</strong> roles, especially in environments that value quality, collaboration, and innovation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section id="projects" class="section projects-section">
+    <h2>Projects</h2>
+    <div id="loading-spinner" class="spinner">Loading...</div>
+    <div id="github-projects" class="projects-grid"></div>
+    <div id="no-projects-message" class="no-projects-message" style="display: none;">
+      No projects to show. Check back later!
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials" class="section testimonials-section">
+    <h2>Testimonials</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <p>"Sahil is a true professional. His attention to detail and dedication to quality is unmatched!"</p>
+        <h4>- CEO of Alluvium IoT Solutions Pvt Ltd</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"I had the pleasure of working with Sahil on several projects. His technical expertise is extraordinary!"</p>
+        <h4>- Lead Developer at Interflora.com</h4>
+      </div>
+      <div class="testimonial-card">
+        <p>"Sahil brings creativity and innovation to everything he does. Highly recommended!"</p>
+        <h4>- Product Manager at IGP.com</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section contact-section">
+    <h2>Contact</h2>
+    <form class="contact-form" action="https://formspree.io/f/mldbnjqe" method="POST">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <textarea name="message" rows="4" placeholder="Your Message" required></textarea>
+      <button type="submit">Send Message</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Sahil Dalvi. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const username = "Psyhilll";
+    const excludedRepos = ["your-portfolio"];
+
+    document.getElementById('loading-spinner').style.display = 'block';
+
+    async function fetchRepos() {
+      const res = await fetch(`https://api.github.com/users/${username}/repos`);
+      const data = await res.json();
+
+      const container = document.getElementById("github-projects");
+      const noProjectsMessage = document.getElementById("no-projects-message");
+      const loadingSpinner = document.getElementById("loading-spinner");
+
+      loadingSpinner.style.display = 'none';
+
+      if (data.length === 0) {
+        noProjectsMessage.style.display = 'block';
+        return;
+      }
+
+      data.sort((a, b) => b.stargazers_count - a.stargazers_count);
+      const topProjects = data.slice(0, 6);
+
+      topProjects
+        .filter(repo => !repo.fork && !excludedRepos.includes(repo.name))
+        .forEach(repo => {
+          const card = document.createElement("div");
+          card.className = "project-card";
+
+          card.innerHTML = `
+            <div>
+              <h3>${repo.name}</h3>
+              <p>${repo.description || "No description provided."}</p>
+              <a class="btn" href="${repo.html_url}" target="_blank">View Project</a>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+    }
+
+    fetchRepos();
+  </script>
+</body>
+
+</html>
